@@ -1,1 +1,67 @@
-node_modules
+# === Node ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Build output ===
+.next/
+out/
+dist/
+build/
+
+# === Environment variables ===
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === IDEs / Editors ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Logs ===
+logs/
+*.log
+*.log.*
+
+# === Coverage / Tests ===
+coverage/
+*.lcov
+jest-cache/
+jest-test-results.json
+
+# === Typescript ===
+*.tsbuildinfo
+
+# === Misc ===
+*.bak
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+
+# === Optional: lockfiles (uncomment if you only use one package manager) ===
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# === Next.js specific ===
+.vercel/
+.next/
+
+# === Environment folders or custom secrets ===
+.env.backup
+.env.example
+.env.*
+.env
+env
