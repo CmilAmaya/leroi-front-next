@@ -10,17 +10,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-//import '../../../styles/roadmap.css';
 import '../../styles/roadmap.css'; 
 
-import { getCookie, setCookie, deleteCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 
-// Importación dinámica para ReactFlow (solo cliente)
-const ReactFlow = dynamic(() => import('@xyflow/react'), { 
-  ssr: false,
-  loading: () => <div>Cargando roadmap...</div>
-});
-const Background = dynamic(() => import('@xyflow/react').then(mod => ({ default: mod.Background })), { ssr: false });
+// Importación dinámica para ReactFlow (named export)
+const ReactFlow = dynamic(
+  () => import('@xyflow/react').then(mod => ({ default: mod.ReactFlow })),
+  { ssr: false, loading: () => <div>Cargando roadmap...</div> }
+);
+
+const Background = dynamic(
+  () => import('@xyflow/react').then(mod => ({ default: mod.Background })),
+  { ssr: false }
+);
 
 // Importar CustomNode dinámicamente también
 const CustomNode = dynamic(() => import('../../components/ui/CustomNode'), { ssr: false });
@@ -53,12 +56,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
 
   // Efecto para obtener datos del localStorage o searchParams
   useEffect(() => {
-  
-
-    //const storedRoadmap = localStorage.getItem('currentRoadmap');
-    //const storedRelatedTopics = localStorage.getItem('relatedTopics');
-    //const storedRoadmapInfo = localStorage.getItem('roadmapInfo');
-
     const storedRoadmap = getCookie('currentRoadmap');
     const storedRelatedTopics = getCookie('relatedTopics');
     const storedRoadmapInfo = getCookie('roadmapInfo');
@@ -69,7 +66,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
       } catch (error) {
         console.error('Error parsing roadmap data:', error);
       }
-
     } else {
       console.log('No hay datos de roadmap en las cookies.');
     }
@@ -95,8 +91,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   useEffect(() => {
     if (Object.keys(generatedQuestions).length > 0) {
       setLoadingPage(false);
-      // Guardar en localStorage y navegar
-      //localStorage.setItem('generatedQuestions', JSON.stringify(generatedQuestions));
       setCookie('generatedQuestions', JSON.stringify(generatedQuestions), {
         path: '/',
         maxAge: 60 * 60 * 24,
@@ -175,7 +169,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     setLoadingPage(true);
     
     try {
-      //const authToken = localStorage.getItem("token");
       const authToken = getCookie("token");
       const questionsResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/learning_path/questions`, {
         method: "POST",
@@ -202,7 +195,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
 
   const handleShowModal = () => {
     setRelatedTopicsModal(true);
-    //localStorage.setItem('topicsModal', 'true');
     setCookie('topicsModal', 'true', {
       path: '/',
       maxAge: 60 * 60 * 24,
@@ -213,7 +205,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
 
   const handleNewRoadmap = () => {
     const topicState = relatedTopicsModal ? { relatedTopics } : {};
-    //localStorage.setItem('topicState', JSON.stringify(topicState));
     setCookie('topicState', JSON.stringify(topicState), {
       path: '/',
       maxAge: 60 * 60 * 24,
@@ -249,7 +240,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   };
 
   const saveImageToDB = async (base64Image) => {
-    //const authToken = localStorage.getItem("token");
     const authToken = getCookie("token");
 
     if (!roadmapData || Object.keys(roadmapData).length === 0) {
@@ -391,6 +381,14 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   const edges = [];
   let idCounter = 0;
 
+  // Normaliza a array para evitar "forEach is not a function"
+  const toArray = (v) => {
+    if (Array.isArray(v)) return v;
+    if (v == null) return [];
+    if (typeof v === 'object') return Object.values(v).flatMap(x => Array.isArray(x) ? x : [x]);
+    return [v];
+  };
+
   if (roadmapData) {
     Object.keys(roadmapData).forEach((topicKey, topicIndex) => {
       const topicNode = {
@@ -401,7 +399,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
       };
       nodes.push(topicNode);
 
-      const topic = roadmapData[topicKey];
+      const topic = roadmapData[topicKey] || {};
       Object.keys(topic).forEach((subtopicKey, subtopicIndex) => {
         const subtopicNode = {
           id: `subtopic-${idCounter++}`,
@@ -412,10 +410,11 @@ export default function GeneratedRoadmapClient({ searchParams }) {
         nodes.push(subtopicNode);
         edges.push({ id: `e-${topicNode.id}-${subtopicNode.id}`, source: topicNode.id, target: subtopicNode.id });
 
-        topic[subtopicKey].forEach((subSubtopic, index) => {
+        const items = toArray(topic[subtopicKey]);
+        items.forEach((subSubtopic, index) => {
           const subSubtopicNode = {
             id: `subSubtopic-${idCounter++}`,
-            data: { label: subSubtopic, color: '#FF92E6' },
+            data: { label: String(subSubtopic), color: '#FF92E6' },
             position: { x: nodeWidth * 2, y: topicIndex * levelOffset + subtopicIndex * levelOffset / 2 + index * 50 },
             type: 'custom',
           };

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { PDFDocument } from 'pdf-lib';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next'; // ...existing code... ← agregado setCookie/deleteCookie
 import Image from 'next/image';
 import '../../styles/roadmap.css';
 
@@ -62,24 +62,44 @@ function Roadmap() {
   }, [topics]);
 
   useEffect(() => {
-    const storedModalState = localStorage.getItem('topicsModal');
+    // const storedModalState = localStorage.getItem('topicsModal');
+    // if (storedModalState === 'true') {
+    //   if (locationState?.relatedTopics) {
+    //     setTopics(locationState.relatedTopics || []);
+    //   }
+    //   setTopicsModal(true);
+    //   localStorage.removeItem('topicsModal');
+    // }
+    // ↓ Nuevo: leer estado desde cookies
+    const storedModalState = getCookie('topicsModal');
     if (storedModalState === 'true') {
-      if (locationState?.relatedTopics) {
+      const topicStateCookie = getCookie('topicState');
+      if (topicStateCookie) {
+        try {
+          const parsed = JSON.parse(topicStateCookie);
+          if (parsed?.relatedTopics?.length) setTopics(parsed.relatedTopics);
+        } catch (e) {
+          console.error('Error al parsear topicState:', e);
+        }
+      } else if (locationState?.relatedTopics) {
         setTopics(locationState.relatedTopics || []);
       }
       setTopicsModal(true);
-      localStorage.removeItem('topicsModal');
+      // Limpia cookies usadas una vez
+      deleteCookie('topicsModal');
+      deleteCookie('topicState');
     }
   }, [locationState]);
 
-  useEffect(() => {
-    if (Object.keys(roadmapTopics).length > 0) {
-      console.log("Roadmap Topics:", roadmapTopics);
-      setLoadingPage(false);
-      setLoadingText("");
-      router.push('/generatedRoadmap', { state: { roadmapTopics, relatedTopics, roadmapInfo } });
-    }
-  }, [roadmapTopics, relatedTopics, router]);
+  // useEffect(() => {
+  //   if (Object.keys(roadmapTopics).length > 0) {
+  //     console.log("Roadmap Topics:", roadmapTopics);
+  //     setLoadingPage(false);
+  //     setLoadingText("");
+  //     router.push('/generatedRoadmap', { state: { roadmapTopics, relatedTopics, roadmapInfo } });
+  //   }
+  // }, [roadmapTopics, relatedTopics, router]);
+  // ↑ Comentado: ahora navegamos cuando seteamos cookies (ver handleSelectedTopic)
 
   useEffect(() => {
     if (relatedTopics.length > 0) {
@@ -194,23 +214,34 @@ function Roadmap() {
       setCanUserPay(canPay);
       if (!canPay) toast.error('Créditos insuficientes 😔');
 
-      const analyzePromise = fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_PREPROCESSING}/files/analyses`, {
-        method: 'POST',
-        headers: { 
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      analyzePromise
-        .then(res => res.json())
-        .then((analyzeResult) => {
-          if (analyzeResult.has_virus) {
-            toast.error("El archivo contiene virus. El usuario ha sido eliminado.");
-          }
+      // const analyzePromise = fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_PREPROCESSING}/files/analyses`, { ... });
+      // ↓ Nuevo: evita /undefined/files/analyses cuando falta la env var
+      //const preprocBase = process.env.NEXT_PUBLIC_BACKEND_URL_PREPROCESSING;
+      const preprocBase = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!preprocBase) {
+        console.error('Falta NEXT_PUBLIC_BACKEND_URL_PREPROCESSING');
+      } else {
+        fetch(`${preprocBase}/files/analyses`, {
+          method: 'POST',
+          headers: { 
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataToSend),
         })
-        .catch((error) => console.error('Error al analizar el archivo:', error));
+          .then(async (res) => {
+            const ct = res.headers.get('content-type') || '';
+            const payload = ct.includes('application/json') ? await res.json() : await res.text();
+            if (!res.ok) throw new Error(typeof payload === 'string' ? payload : payload?.detail || 'Error en análisis');
+            return payload;
+          })
+          .then((analyzeResult) => {
+            if (analyzeResult?.has_virus) {
+              toast.error("El archivo contiene virus. El usuario ha sido eliminado.");
+            }
+          })
+          .catch((error) => console.error('Error al analizar el archivo:', error));
+      }
 
     } catch (error) {
       console.error('Error al obtener la vista previa de costos:', error);
@@ -251,9 +282,10 @@ function Roadmap() {
       });
 
       if (!processResponse.ok) {
-        const errorData = await processResponse.json();
+        // const errorData = await processResponse.json(); // podía fallar con HTML
+        const text = await processResponse.text();
         toast.error("Error en el procesamiento del documento, vuelve a intentarlo");
-        throw new Error(errorData.detail);
+        throw new Error(text || 'Error en /learning_path/documents');
       }
 
       const result = await processResponse.json();
@@ -327,9 +359,24 @@ function Roadmap() {
       if (!responseTopics.ok) throw new Error('Error al obtener los temas relacionados');
       const resultTopics = await responseTopics.json();
 
-      setRelatedTopics(resultTopics);
-      setRoadmapTopics(roadmapData);
-      setRoadmapInfo(extraInfoData);
+      // setRelatedTopics(resultTopics);
+      // setRoadmapTopics(roadmapData);
+      // setRoadmapInfo(extraInfoData);
+      // router.push('/generatedRoadmap', { state: { roadmapTopics, relatedTopics, roadmapInfo } });
+      // ↑ Comentado: ahora usamos cookies para que GeneratedRoadmap las lea
+
+      // ↓ Nuevo: persistimos en cookies y navegamos
+      const cookieOpts = {
+        path: '/',
+        maxAge: 60 * 60 * 24, // 24 horas
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+      };
+      setCookie('currentRoadmap', JSON.stringify(roadmapData), cookieOpts);
+      setCookie('relatedTopics', JSON.stringify(resultTopics), cookieOpts);
+      setCookie('roadmapInfo', JSON.stringify(extraInfoData), cookieOpts);
+
+      router.push('/generatedRoadmap');
 
     } catch (error) {
       console.error('🚨 Error detallado al generar la ruta:', error);
