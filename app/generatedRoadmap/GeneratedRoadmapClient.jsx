@@ -10,7 +10,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import '../../styles/roadmap.css'; 
+import '../../styles/roadmap.css';
+import '@xyflow/react/dist/style.css';
 
 import { getCookie, setCookie } from 'cookies-next';
 
@@ -25,7 +26,7 @@ const Background = dynamic(
   { ssr: false }
 );
 
-// Importar CustomNode dinámicamente también
+// Importar CustomNode dinámicamente
 const CustomNode = dynamic(() => import('../../components/ui/CustomNode'), { ssr: false });
 
 export default function GeneratedRoadmapClient({ searchParams }) {
@@ -54,7 +55,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   const roadmapRef = useRef(null);
   const reactFlowInstance = useRef(null);
 
-  // Efecto para obtener datos del localStorage o searchParams
+  // Cargar datos desde cookies
   useEffect(() => {
     const storedRoadmap = getCookie('currentRoadmap');
     const storedRelatedTopics = getCookie('relatedTopics');
@@ -87,7 +88,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     }
   }, []);
 
-  // Efecto para navegar a questions
+  // Guardar preguntas en cookie y navegar
   useEffect(() => {
     if (Object.keys(generatedQuestions).length > 0) {
       setLoadingPage(false);
@@ -101,7 +102,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     }
   }, [generatedQuestions, router]);
 
-  // Efecto para dimensiones responsivas
+  // Responsivo
   useEffect(() => {
     const updateDimensions = () => {
       const width = window.innerWidth;
@@ -488,7 +489,6 @@ export default function GeneratedRoadmapClient({ searchParams }) {
           nodes={nodes}
           edges={edges}
           nodeTypes={{ custom: CustomNode }}
-          fit
           onInit={onInit}
           onNodeClick={handleNodeEnter}
           onMove={handleNodeLeave}
