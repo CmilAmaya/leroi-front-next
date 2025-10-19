@@ -13,6 +13,8 @@ import jsPDF from 'jspdf';
 //import '../../../styles/roadmap.css';
 import '../../styles/roadmap.css'; 
 
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
+
 // Importación dinámica para ReactFlow (solo cliente)
 const ReactFlow = dynamic(() => import('@xyflow/react'), { 
   ssr: false,
@@ -51,14 +53,15 @@ export default function GeneratedRoadmapClient({ searchParams }) {
 
   // Efecto para obtener datos del localStorage o searchParams
   useEffect(() => {
-    // Aquí puedes obtener los datos de diferentes maneras:
-    // 1. De localStorage (como antes)
-    // 2. De searchParams codificados
-    // 3. De una API call con SSR
+  
 
-    const storedRoadmap = localStorage.getItem('currentRoadmap');
-    const storedRelatedTopics = localStorage.getItem('relatedTopics');
-    const storedRoadmapInfo = localStorage.getItem('roadmapInfo');
+    //const storedRoadmap = localStorage.getItem('currentRoadmap');
+    //const storedRelatedTopics = localStorage.getItem('relatedTopics');
+    //const storedRoadmapInfo = localStorage.getItem('roadmapInfo');
+
+    const storedRoadmap = getCookie('currentRoadmap');
+    const storedRelatedTopics = getCookie('relatedTopics');
+    const storedRoadmapInfo = getCookie('roadmapInfo');
     
     if (storedRoadmap) {
       try {
@@ -66,6 +69,9 @@ export default function GeneratedRoadmapClient({ searchParams }) {
       } catch (error) {
         console.error('Error parsing roadmap data:', error);
       }
+
+    } else {
+      console.log('No hay datos de roadmap en las cookies.');
     }
     
     if (storedRelatedTopics) {
@@ -90,7 +96,13 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     if (Object.keys(generatedQuestions).length > 0) {
       setLoadingPage(false);
       // Guardar en localStorage y navegar
-      localStorage.setItem('generatedQuestions', JSON.stringify(generatedQuestions));
+      //localStorage.setItem('generatedQuestions', JSON.stringify(generatedQuestions));
+      setCookie('generatedQuestions', JSON.stringify(generatedQuestions), {
+        path: '/',
+        maxAge: 60 * 60 * 24,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+      });
       router.push('/questions');
     }
   }, [generatedQuestions, router]);
@@ -163,7 +175,8 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     setLoadingPage(true);
     
     try {
-      const authToken = localStorage.getItem("token");
+      //const authToken = localStorage.getItem("token");
+      const authToken = getCookie("token");
       const questionsResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/learning_path/questions`, {
         method: "POST",
         headers: {
@@ -189,12 +202,24 @@ export default function GeneratedRoadmapClient({ searchParams }) {
 
   const handleShowModal = () => {
     setRelatedTopicsModal(true);
-    localStorage.setItem('topicsModal', 'true');
+    //localStorage.setItem('topicsModal', 'true');
+    setCookie('topicsModal', 'true', {
+      path: '/',
+      maxAge: 60 * 60 * 24,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    });
   };
 
   const handleNewRoadmap = () => {
     const topicState = relatedTopicsModal ? { relatedTopics } : {};
-    localStorage.setItem('topicState', JSON.stringify(topicState));
+    //localStorage.setItem('topicState', JSON.stringify(topicState));
+    setCookie('topicState', JSON.stringify(topicState), {
+      path: '/',
+      maxAge: 60 * 60 * 24,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    });
     router.push('/roadmap');
   };
 
@@ -224,7 +249,8 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   };
 
   const saveImageToDB = async (base64Image) => {
-    const authToken = localStorage.getItem("token");
+    //const authToken = localStorage.getItem("token");
+    const authToken = getCookie("token");
 
     if (!roadmapData || Object.keys(roadmapData).length === 0) {
       console.error("No hay datos del roadmap para guardar.");
