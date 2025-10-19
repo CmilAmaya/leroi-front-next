@@ -1,0 +1,386 @@
+.pricing-container-p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background);
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.pricing-box-p {
+    background: rgba(30, 31, 38, 0.95);
+    border-radius: 16px;
+    padding: 30px;
+    padding-top: 20px;
+    margin-top: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    position: relative;
+    z-index: 1;
+}
+
+/* Título con ícono */
+.pricing-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.icon-title {
+  color: #835bfc;
+  font-size: 32px;
+}
+
+.pricing-title-p {
+    text-align: center;
+    color: #fff;
+    font-size: 32px;
+    margin-bottom: 18px;
+}
+
+.pricing-subtitle-p {
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 32px;
+    opacity: 0.8;
+}
+
+/* Label con ícono */
+.label-credits, .label-price {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.icon-label {
+  color: #835bfc;
+}
+
+.credit-input {
+    font-family: 'Lexend Deca', sans-serif;
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.credit-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.terms {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.terms-group {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    text-align: justify;
+}
+
+.terms-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.terms-link {
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+.button-container {
+    margin-bottom: 14px;
+}
+
+.button-container:last-child {
+    margin-bottom: 28px;
+}
+
+
+
+/* Selección de cantidad de creditos */
+
+.credit-options {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.credit-options select {
+    font-family: 'Lexend Deca', sans-serif;
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.credit-options select:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.credit-options select:focus {
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* Estilizar las opciones del select */
+.credit-options select option {
+    background: #1e1f26;
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+}
+
+/* Evitar que la primera opción (placeholder) sea seleccionable */
+.credit-options select option:disabled {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Badge de precio */
+.price-group {
+  margin-top: 18px;
+}
+.price-badge-wrapper {
+  margin-top: 8px;
+}
+.price-badge {
+  background: #835bfc;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 18px;
+  display: inline-block;
+}
+.icon-badge {
+  margin-right: 8px;
+}
+
+/* Checkbox y términos */
+.terms-group {
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+.checkbox-terms {
+  accent-color: #835bfc;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+.label-terms {
+  font-size: 15px;
+  color: #fff;
+  margin-right: 4px;
+}
+.terms-link-btn {
+  background: none;
+  border: none;
+  color: #6366f1;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 15px;
+  padding: 0;
+}
+
+/* Botón de compra */
+.buy-btn {
+  width: 100%;
+  padding: 14px 0;
+  font-size: 18px;
+  font-weight: 700;
+  background: #835bfc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px #835bfc44;
+  transition: background 0.2s;
+}
+.buy-btn:disabled {
+  background: #a48cf7;
+  cursor: not-allowed;
+}
+.icon-btn {
+  margin-right: 6px;
+}
+
+/* Error */
+.error-msg-custom {
+  color: #ff6b6b;
+  margin-top: 10px;
+}
+
+/* Modal de términos */
+.modal-terms .modal-title {
+  color: #835bfc;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.icon-modal-title {
+  margin-right: 8px;
+  color: #835bfc;
+  font-size: 22px;
+}
+.modal-terms-text {
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.close-modal-btn {
+  margin-top: 18px;
+  background: #835bfc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Modal de verificación */
+.verification-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000 !important;
+}
+
+.modal-content {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid #835bfc;
+    text-align: center;
+}
+
+.modal-content h2 {
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.modal-content p {
+    color: #ccc;
+    margin-bottom: 0.5rem;
+}
+
+.modal-content .email {
+    color: #835bfc;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+/* Payment Success & Failure Styles */
+.success-icon, .error-icon {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.checkmark-circle, .error-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0 auto;
+}
+
+.checkmark-circle {
+    background: #835bfc;
+    box-shadow: 0 0 20px rgba(131, 91, 252, 0.3);
+}
+
+.error-circle {
+    background: #ff6b6b;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+.success-details, .failure-details {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    margin-bottom: 28px;
+    text-align: center;
+    font-weight: 400;
+}
+
+.info-note {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info-note p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.info-note strong {
+    font-weight: 600;
+    color: #835bfc;
+}
+
+.timestamp {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 16px;
+    text-align: center;
+}
+
+.timestamp small {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}

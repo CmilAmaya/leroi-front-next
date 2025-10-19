@@ -63,11 +63,11 @@ export default function Navbar({ t = {} }) {
 
           {/* Enlaces */}
           <div className={`navbar-links ${menuOpen ? "menu-open" : ""}`}>
-            <NavItem href="/about">{nav.about}</NavItem>
-            <NavItem href="/#credits">{nav.credits}</NavItem>
-            <NavItem href="/#faq">{nav.faq}</NavItem>
-            <NavItem href="/about/#team">{nav.contact}</NavItem>
-            {isAuthenticated && <NavItem href="/roadmap">{nav.roadmap}</NavItem>}
+              <NavItem href="/about">{nav.about}</NavItem>
+              <NavItem href="/credits">{nav.credits}</NavItem>
+              <NavItem href="/#faq">{nav.faq}</NavItem>
+              <NavItem href="/about/#team">{nav.contact}</NavItem>
+              {isAuthenticated && <NavItem href="/roadmap">{nav.roadmap}</NavItem>}
           </div>
 
           {/* Botones */}
