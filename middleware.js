@@ -1,5 +1,4 @@
-// middleware.js
-/*import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export function middleware(req) {
   const token = req.cookies.get("token"); 
@@ -29,16 +28,4 @@ export const config = {
     "/questions/:path*",
     "/pricing/:path*",
   ],
-};*/
-// middleware.js
-import { NextResponse } from "next/server";
-
-export function middleware(req) {
-  // ⚡ Desactiva temporalmente toda lógica de protección
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: [], // o puedes eliminar esta exportación también
 };
-
