@@ -12,7 +12,7 @@ import {
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import '../../styles/pricing.css';
-
+import { getCookie } from 'cookies-next';
 
 
 function Pricing() {
@@ -26,8 +26,8 @@ function Pricing() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [showTermsModal, setShowTermsModal] = useState(false);
-    const authToken = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
-    const userEmail = typeof window !== 'undefined' ? localStorage.getItem("userEmail") : null;
+    const authToken = getCookie('token');
+    const userEmail = getCookie('userEmail');
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
     const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
