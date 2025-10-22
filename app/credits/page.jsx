@@ -1,23 +1,18 @@
-
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { useRouter, useSearchParams } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-    faDownload, faTimes, faSearchPlus, faSearchMinus, 
-    faExpand, faSave, faClipboardQuestion, faLink 
+import {
+    faDownload, faTimes, faSearchPlus, faSearchMinus,
+    faExpand, faSave, faClipboardQuestion, faLink
 } from '@fortawesome/free-solid-svg-icons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import '../../styles/pricing.css';
 
-
-
 function Pricing() {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const [formData, setFormData] = useState({
         credits: '',
         acceptTerms: false,
@@ -26,25 +21,25 @@ function Pricing() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [showTermsModal, setShowTermsModal] = useState(false);
+
     const authToken = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
     const userEmail = typeof window !== 'undefined' ? localStorage.getItem("userEmail") : null;
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
     const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
 
     const fetchCreditsCost = async (amount) => {
-        console.log("BACKEND_URL:", BACKEND_URL);
         try {
             const query = `
-            query GetPrice($credits: Int!) {
-                price(credits: $credits) {
-                    credits
-                    cost
-                    currency
+                query GetPrice($credits: Int!) {
+                    price(credits: $credits) {
+                        credits
+                        cost
+                        currency
+                    }
                 }
-            }`;
-
+            `;
             const variables = { credits: parseInt(amount, 10) };
-                console.log("BACKEND_URL:", BACKEND_URL);
+
             const response = await fetch(`${BACKEND_URL}/payments-be`, {
                 method: 'POST',
                 headers: {
@@ -57,7 +52,7 @@ function Pricing() {
             const result = await response.json();
 
             if (result.data?.price) {
-                return result.data.price.cost; // devolvemos solo el costo
+                return result.data.price.cost;
             } else {
                 console.error('Error al calcular el costo:', result.errors || result);
                 return null;
@@ -68,19 +63,22 @@ function Pricing() {
         }
     };
 
-    // Si hay un query param ?credits=xxx, lo usamos para inicializar el formulario
+    // ✅ Reemplazo seguro del useSearchParams (solo se ejecuta en cliente)
     useEffect(() => {
-        const creditsParam = searchParams.get('credits');
-        if (creditsParam) {
-            setFormData((prevData) => ({
-                ...prevData,
-                credits: creditsParam,
-            }));
-            fetchCreditsCost(creditsParam).then((totalCost) => {
-                if (totalCost !== null) setTotalCost(totalCost);
-            });
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const creditsParam = params.get('credits');
+            if (creditsParam) {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    credits: creditsParam,
+                }));
+                fetchCreditsCost(creditsParam).then((totalCost) => {
+                    if (totalCost !== null) setTotalCost(totalCost);
+                });
+            }
         }
-    }, [searchParams]);
+    }, []);
 
     const handleChange = async (e) => {
         const { name, value, type, checked } = e.target;
@@ -128,7 +126,6 @@ function Pricing() {
         try {
             toast.success("Redirigiendo a la plataforma de pago...");
 
-            //Obtener el precio desde GraphQL (usando tu helper fetchCreditsCost)
             const cost = await fetchCreditsCost(formData.credits);
 
             if (!cost) {
@@ -138,37 +135,36 @@ function Pricing() {
             }
 
             const sessionId = await createSession(authToken, formData.credits, userEmail);
-                if (!sessionId) {
-                    toast.error("No se pudo generar la sesión segura.");
-                    setIsSubmitting(false);
-                    return;
-                }   
+            if (!sessionId) {
+                toast.error("No se pudo generar la sesión segura.");
+                setIsSubmitting(false);
+                return;
+            }
 
-            //Mutación con variables
             const query = `
-            mutation CreatePref($input: PreferenceInput!) {
-                createPreference(input: $input) {
-                    id
-                    initPoint
-                    sandboxInitPoint
+                mutation CreatePref($input: PreferenceInput!) {
+                    createPreference(input: $input) {
+                        id
+                        initPoint
+                        sandboxInitPoint
+                    }
                 }
-            }`;
+            `;
 
             const variables = {
-            input: {
-                items: [
-                {
-                    title: `${formData.credits} Créditos`,
-                    quantity: 1,
-                    unitPrice: cost,
-                    currencyId: "USD",
+                input: {
+                    items: [
+                        {
+                            title: `${formData.credits} Créditos`,
+                            quantity: 1,
+                            unitPrice: cost,
+                            currencyId: "USD",
+                        },
+                    ],
+                    externalReference: `{"sessionId":"${sessionId}"}`,
                 },
-                ],
-                externalReference: `{"sessionId":"${sessionId}"}`,
-            },
             };
 
-            // Ejecutar mutación
             const response = await fetch(`${BACKEND_URL}/payments-be`, {
                 method: "POST",
                 headers: {
@@ -183,7 +179,7 @@ function Pricing() {
             const payment = result.data?.createPreference;
             if (payment) {
                 console.log("Link de pago:", payment.initPoint);
-                window.open(payment.initPoint, "_blank"); // abre en nueva pestaña
+                window.open(payment.initPoint, "_blank");
             } else {
                 console.error("Error en GraphQL:", result.errors);
                 setError("Ocurrió un error al generar el enlace de pago.");
@@ -211,15 +207,12 @@ function Pricing() {
     return (
         <div className="pricing-container-p">
             <div className="pricing-box-p">
-                                                <h1 className="pricing-title-p pricing-title-icon">
-                                                    Comprar Créditos
-                                                </h1>
+                <h1 className="pricing-title-p pricing-title-icon">
+                    Comprar Créditos
+                </h1>
                 <form onSubmit={handleSubmit}>
-
                     <div className="form-group">
-                                                <label className="label-credits">
-                                                    Cantidad de créditos
-                                                </label>
+                        <label className="label-credits">Cantidad de créditos</label>
                         <div className="credit-options">
                             <select
                                 id="credits"
@@ -237,16 +230,14 @@ function Pricing() {
                         </div>
                     </div>
 
-                                        <div className="form-group price-group">
-                                                                        <label className="label-price">
-                                                                            Precio total
-                                                                        </label>
-                                                <div className="price-badge-wrapper">
-                                                                                <span className="price-badge">
-                                                                                    {`$${totalCost} USD`}
-                                                                                </span>
-                                                </div>
-                                        </div>
+                    <div className="form-group price-group">
+                        <label className="label-price">Precio total</label>
+                        <div className="price-badge-wrapper">
+                            <span className="price-badge">
+                                {`$${totalCost} USD`}
+                            </span>
+                        </div>
+                    </div>
 
                     <div className="form-group terms terms-group">
                         <input
@@ -259,7 +250,7 @@ function Pricing() {
                         />
                         <label htmlFor="acceptTerms" className="label-terms">Acepto los</label>
                         <button type="button" className="terms-link-btn" onClick={() => setShowTermsModal(true)}>
-                          términos y condiciones
+                            términos y condiciones
                         </button>
                     </div>
 
@@ -274,31 +265,30 @@ function Pricing() {
                     </div>
                     {error && <p className="error-message error-msg-custom">{error}</p>}
                 </form>
+
                 {showTermsModal && (
                     <div className="verification-modal">
                         <div className="modal-content modal-terms">
-                            <h2 className="modal-title">
-                              Términos y condiciones
-                            </h2>
+                            <h2 className="modal-title">Términos y condiciones</h2>
                             <p className="terms-text modal-terms-text">
-                            Al realizar un pago por medio de la pasarela de pago de Leroi, el usuario acepta que no se realizarán <br/>
-                            devoluciones bajo ninguna circunstancia. Leroi no se hace responsable por el uso que el usuario dé a <br/>
-                            los créditos adquiridos ni por cualquier transacción realizada a través de la plataforma. <br/>
-                            Toda responsabilidad de pago, incluyendo cargos, montos adeudados y cualquier otro compromiso financiero, <br/>
-                            recae exclusivamente en el usuario, quien deberá asegurarse de cumplir con sus obligaciones de pago de <br/>
-                            manera adecuada.</p>
-                            <button 
-                            onClick={() => setShowTermsModal(false)}
-                            className="verify-button close-modal-btn"
+                                Al realizar un pago por medio de la pasarela de pago de Leroi, el usuario acepta que no se realizarán <br />
+                                devoluciones bajo ninguna circunstancia. Leroi no se hace responsable por el uso que el usuario dé a <br />
+                                los créditos adquiridos ni por cualquier transacción realizada a través de la plataforma. <br />
+                                Toda responsabilidad de pago, incluyendo cargos, montos adeudados y cualquier otro compromiso financiero, <br />
+                                recae exclusivamente en el usuario, quien deberá asegurarse de cumplir con sus obligaciones de pago de <br />
+                                manera adecuada.
+                            </p>
+                            <button
+                                onClick={() => setShowTermsModal(false)}
+                                className="verify-button close-modal-btn"
                             >
-                            Cerrar
+                                Cerrar
                             </button>
                         </div>
                     </div>
                 )}
             </div>
         </div>
-            
     );
 }
 
