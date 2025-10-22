@@ -63,15 +63,6 @@ function Roadmap() {
   }, [topics]);
 
   useEffect(() => {
-    // const storedModalState = localStorage.getItem('topicsModal');
-    // if (storedModalState === 'true') {
-    //   if (locationState?.relatedTopics) {
-    //     setTopics(locationState.relatedTopics || []);
-    //   }
-    //   setTopicsModal(true);
-    //   localStorage.removeItem('topicsModal');
-    // }
-    // ↓ Nuevo: leer estado desde cookies
     const storedModalState = getCookie('topicsModal');
     if (storedModalState === 'true') {
       const topicStateCookie = getCookie('topicState');
@@ -86,21 +77,10 @@ function Roadmap() {
         setTopics(locationState.relatedTopics || []);
       }
       setTopicsModal(true);
-      // Limpia cookies usadas una vez
       deleteCookie('topicsModal');
       deleteCookie('topicState');
     }
   }, [locationState]);
-
-  // useEffect(() => {
-  //   if (Object.keys(roadmapTopics).length > 0) {
-  //     console.log("Roadmap Topics:", roadmapTopics);
-  //     setLoadingPage(false);
-  //     setLoadingText("");
-  //     router.push('/generatedRoadmap', { state: { roadmapTopics, relatedTopics, roadmapInfo } });
-  //   }
-  // }, [roadmapTopics, relatedTopics, router]);
-  // ↑ Comentado: ahora navegamos cuando seteamos cookies (ver handleSelectedTopic)
 
   useEffect(() => {
     if (relatedTopics.length > 0) {
@@ -138,7 +118,6 @@ function Roadmap() {
     fetchUserData();
   }, [backendUrl, authToken, router]);
 
-  // --- FUNCIONES DE MANEJO DE ARCHIVOS ---
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     const maxSize = 50 * 1024 * 1024; 
@@ -215,9 +194,6 @@ function Roadmap() {
       setCanUserPay(canPay);
       if (!canPay) toast.error('Créditos insuficientes 😔');
 
-      // const analyzePromise = fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_PREPROCESSING}/files/analyses`, { ... });
-      // ↓ Nuevo: evita /undefined/files/analyses cuando falta la env var
-      //const preprocBase = process.env.NEXT_PUBLIC_BACKEND_URL_PREPROCESSING;
       const preprocBase = process.env.NEXT_PUBLIC_BACKEND_URL;
       if (!preprocBase) {
         console.error('Falta NEXT_PUBLIC_BACKEND_URL_PREPROCESSING');
@@ -283,7 +259,6 @@ function Roadmap() {
       });
 
       if (!processResponse.ok) {
-        // const errorData = await processResponse.json(); // podía fallar con HTML
         const text = await processResponse.text();
         toast.error("Error en el procesamiento del documento, vuelve a intentarlo");
         throw new Error(text || 'Error en /learning_path/documents');
@@ -360,18 +335,10 @@ function Roadmap() {
       if (!responseTopics.ok) throw new Error('Error al obtener los temas relacionados');
       const resultTopics = await responseTopics.json();
 
-      // setRelatedTopics(resultTopics);
-      // setRoadmapTopics(roadmapData);
-      // setRoadmapInfo(extraInfoData);
-      // router.push('/generatedRoadmap', { state: { roadmapTopics, relatedTopics, roadmapInfo } });
-      // ↑ Comentado: ahora usamos cookies para que GeneratedRoadmap las lea
-
-      // ↓ Nuevo: persistimos en cookies y navegamos
       const cookieOpts = {
         path: '/',
-        maxAge: 60 * 60 * 24, // 24 horas
+        maxAge: 60 * 60 * 24, 
         sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production',
       };
       setCookie('currentRoadmap', JSON.stringify(roadmapData), cookieOpts);
       setCookie('relatedTopics', JSON.stringify(resultTopics), cookieOpts);
