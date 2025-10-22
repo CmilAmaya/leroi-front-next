@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { PDFDocument } from 'pdf-lib';
-import { getCookie, setCookie, deleteCookie } from 'cookies-next'; // ...existing code... ← agregado setCookie/deleteCookie
+import { getCookie, setCookie, deleteCookie } from 'cookies-next'; 
+import { Suspense } from 'react';
 import Image from 'next/image';
 import '../../styles/roadmap.css';
 
@@ -470,4 +471,10 @@ function Roadmap() {
   );
 }
 
-export default Roadmap;
+export default function RoadmapPage() {
+  return (
+    <Suspense fallback={<div>Cargando ruta de aprendizaje...</div>}>
+      <Roadmap />
+    </Suspense>
+  );
+}

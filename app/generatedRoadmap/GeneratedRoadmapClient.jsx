@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -29,9 +29,8 @@ const Background = dynamic(
 // Importar CustomNode dinámicamente
 const CustomNode = dynamic(() => import('../../components/ui/CustomNode'), { ssr: false });
 
-export default function GeneratedRoadmapClient({ searchParams }) {
+export default function GeneratedRoadmapClient() {
   const router = useRouter();
-  const urlSearchParams = useSearchParams();
   
   // Estados
   const [roadmapData, setRoadmapData] = useState(null);
@@ -55,50 +54,60 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   const roadmapRef = useRef(null);
   const reactFlowInstance = useRef(null);
 
-  // Cargar datos desde cookies
+  // Cargar datos desde cookies (usar path '/' para mayor fiabilidad en prod)
   useEffect(() => {
-    const storedRoadmap = getCookie('currentRoadmap');
-    const storedRelatedTopics = getCookie('relatedTopics');
-    const storedRoadmapInfo = getCookie('roadmapInfo');
-    
-    if (storedRoadmap) {
-      try {
-        setRoadmapData(JSON.parse(storedRoadmap));
-      } catch (error) {
-        console.error('Error parsing roadmap data:', error);
+    try {
+      const storedRoadmap = getCookie('currentRoadmap', { path: '/' });
+      const storedRelatedTopics = getCookie('relatedTopics', { path: '/' });
+      const storedRoadmapInfo = getCookie('roadmapInfo', { path: '/' });
+      
+      if (storedRoadmap) {
+        try {
+          setRoadmapData(JSON.parse(storedRoadmap));
+        } catch (error) {
+          console.error('Error parsing roadmap data:', error);
+        }
+      } else {
+        console.log('No hay datos de roadmap en las cookies.');
       }
-    } else {
-      console.log('No hay datos de roadmap en las cookies.');
-    }
-    
-    if (storedRelatedTopics) {
-      try {
-        setRelatedTopics(JSON.parse(storedRelatedTopics));
-      } catch (error) {
-        console.error('Error parsing related topics:', error);
+      
+      if (storedRelatedTopics) {
+        try {
+          setRelatedTopics(JSON.parse(storedRelatedTopics));
+        } catch (error) {
+          console.error('Error parsing related topics:', error);
+        }
       }
-    }
-    
-    if (storedRoadmapInfo) {
-      try {
-        setRoadmapInfo(JSON.parse(storedRoadmapInfo));
-      } catch (error) {
-        console.error('Error parsing roadmap info:', error);
+      
+      if (storedRoadmapInfo) {
+        try {
+          setRoadmapInfo(JSON.parse(storedRoadmapInfo));
+        } catch (error) {
+          console.error('Error parsing roadmap info:', error);
+        }
       }
+    } catch (e) {
+      console.error('Error leyendo cookies:', e);
     }
   }, []);
 
   // Guardar preguntas en cookie y navegar
   useEffect(() => {
-    if (Object.keys(generatedQuestions).length > 0) {
+    // generatedQuestions puede ser array u object; comprobamos longitud de forma segura
+    const hasQuestions = Array.isArray(generatedQuestions)
+      ? generatedQuestions.length > 0
+      : Object.keys(generatedQuestions || {}).length > 0;
+
+    if (hasQuestions) {
       setLoadingPage(false);
       setCookie('generatedQuestions', JSON.stringify(generatedQuestions), {
         path: '/',
         maxAge: 60 * 60 * 24,
-        sameSite: 'strict',
+        sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
       });
-      router.push('/questions');
+      // pequeño delay para asegurar que la cookie se escriba antes de navegar (evita races en prod)
+      setTimeout(() => router.push('/questions'), 100);
     }
   }, [generatedQuestions, router]);
 
@@ -170,7 +179,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     setLoadingPage(true);
     
     try {
-      const authToken = getCookie("token");
+      const authToken = getCookie("token", { path: '/' });
       const questionsResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/learning_path/questions`, {
         method: "POST",
         headers: {
@@ -181,8 +190,8 @@ export default function GeneratedRoadmapClient({ searchParams }) {
       });
   
       if (!questionsResponse.ok) {
-        const errorData = await questionsResponse.json();
-        throw new Error(errorData.detail);
+        const errorData = await questionsResponse.json().catch(() => ({}));
+        throw new Error(errorData.detail || 'Error generando preguntas');
       }
   
       const result = await questionsResponse.json();
@@ -199,7 +208,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     setCookie('topicsModal', 'true', {
       path: '/',
       maxAge: 60 * 60 * 24,
-      sameSite: 'strict',
+      sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
   };
@@ -209,10 +218,11 @@ export default function GeneratedRoadmapClient({ searchParams }) {
     setCookie('topicState', JSON.stringify(topicState), {
       path: '/',
       maxAge: 60 * 60 * 24,
-      sameSite: 'strict',
+      sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
-    router.push('/roadmap');
+    // pequeño delay para asegurar cookie escrita antes de navegación
+    setTimeout(() => router.push('/roadmap'), 100);
   };
 
   const closeModal = () => {
@@ -241,7 +251,7 @@ export default function GeneratedRoadmapClient({ searchParams }) {
   };
 
   const saveImageToDB = async (base64Image) => {
-    const authToken = getCookie("token");
+    const authToken = getCookie("token", { path: '/' });
 
     if (!roadmapData || Object.keys(roadmapData).length === 0) {
       console.error("No hay datos del roadmap para guardar.");
