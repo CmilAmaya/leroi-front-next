@@ -1,0 +1,477 @@
+/* Payment Success Page Styles */
+.payment-success-container {
+    min-height: calc(100vh - 80px);
+    padding-top: 100px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-success-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    max-width: 450px;
+    width: 100%;
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(76, 175, 80, 0.1);
+    margin-top: -20px;
+}
+
+.payment-success-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #4CAF50, #66BB6A, #4CAF50);
+}
+
+/* Success Icon */
+.success-icon {
+    margin-bottom: 24px;
+    animation: bounceIn 1s ease-out;
+}
+
+.checkmark-circle {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+    margin: 0 auto;
+}
+
+.checkmark {
+    animation: checkmarkDraw 0.8s ease-in-out 0.3s both;
+    transform: scale(0);
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes checkmarkDraw {
+    0% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Typography */
+.success-title {
+    color: #1a1a2e;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+
+.success-message {
+    color: #4CAF50;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.success-details {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 28px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Credits Info Box */
+.credits-info-box {
+    background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+    border: 2px solid #4CAF50;
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin-bottom: 28px;
+    text-align: center;
+    position: relative;
+}
+
+.credits-info-box::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(45deg, #4CAF50, #66BB6A, #4CAF50);
+    border-radius: 16px;
+    z-index: -1;
+}
+
+.credits-info-box h3 {
+    color: #2E7D32;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.success-checkmark {
+    font-size: 40px;
+    margin: 12px 0;
+    display: block;
+    animation: checkmarkPulse 2s ease-in-out infinite;
+}
+
+@keyframes checkmarkPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.credits-info-box p {
+    color: #2E7D32;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.btn {
+    padding: 16px 28px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.5);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #1a1a2e;
+    border: 2px solid #1a1a2e;
+    box-shadow: none;
+}
+
+.btn-outline:hover {
+    background: #1a1a2e;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(26, 26, 46, 0.3);
+}
+
+/* Info Note */
+.info-note {
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    border: 1px solid #e0e7ff;
+    border-radius: 12px;
+    padding: 20px;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+}
+
+.info-note p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.info-note strong {
+    font-weight: 600;
+    color: #4CAF50;
+}
+
+/* Timestamp */
+.timestamp {
+    border-top: 1px solid #e9ecef;
+    padding-top: 16px;
+}
+
+.timestamp small {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+/* Confetti Animation */
+.payment-success-card::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: 
+        radial-gradient(circle at 20% 50%, #4CAF50 2px, transparent 3px),
+        radial-gradient(circle at 80% 50%, #66BB6A 2px, transparent 3px),
+        radial-gradient(circle at 40% 20%, #4CAF50 1px, transparent 2px);
+    animation: confetti 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes confetti {
+    0%, 100% { opacity: 0; transform: translateY(0); }
+    50% { opacity: 0.3; transform: translateY(-20px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .payment-success-container {
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 90px;
+        padding-bottom: 30px;
+        min-height: calc(100vh - 70px);
+    }
+
+    .payment-success-card {
+        padding: 32px 24px;
+        max-width: 380px;
+        margin-top: -10px;
+    }
+
+    .success-title {
+        font-size: 26px;
+    }
+
+    .checkmark-circle {
+        width: 75px;
+        height: 75px;
+        font-size: 35px;
+    }
+
+    .btn {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+
+    .credits-info-box {
+        padding: 24px 20px;
+    }
+
+    .success-checkmark {
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-success-container {
+        padding-top: 80px;
+        padding-bottom: 20px;
+        min-height: calc(100vh - 60px);
+    }
+
+    .payment-success-card {
+        padding: 28px 20px;
+        max-width: 340px;
+        margin-top: 0;
+    }
+
+    .success-title {
+        font-size: 24px;
+    }
+
+    .success-message {
+        font-size: 18px;
+    }
+
+    .success-details {
+        font-size: 15px;
+        margin-bottom: 24px;
+    }
+
+    .btn {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    .credits-info-box {
+        padding: 20px 16px;
+    }
+
+    .credits-info-box h3 {
+        font-size: 18px;
+    }
+
+    .success-checkmark {
+        font-size: 36px;
+    }
+
+    .checkmark-circle {
+        width: 65px;
+        height: 65px;
+        font-size: 30px;
+    }
+}
+
+/* Focus states for accessibility */
+.btn:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+/* Hover effects for better UX */
+.payment-success-card:hover {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation for card entry */
+.payment-success-card {
+    animation: slideUpSuccess 0.8s ease-out;
+}
+
+@keyframes slideUpSuccess {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .payment-success-card {
+        background: #1a1a1a;
+        color: #e0e0e0;
+    }
+
+    .success-title {
+        color: #66BB6A;
+    }
+
+    .credits-info-box {
+        background: #2a2a2a;
+        border-left-color: #4CAF50;
+    }
+
+    .credits-info-box h3 {
+        color: #66BB6A;
+    }
+
+    .credits-info-box p {
+        color: #b0b0b0;
+    }
+
+    .info-note {
+        background: #2a2a3a;
+        border-color: #3a3a4a;
+        color: #90CAF9;
+    }
+
+    .info-note strong {
+        color: #66BB6A;
+    }
+
+    .timestamp small {
+        color: #888888;
+    }
+}
+
+/* Success sparkle effects */
+@keyframes sparkle {
+    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0) rotate(360deg); }
+}
+
+.success-icon::before {
+    content: '✨';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 20px;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.success-icon::after {
+    content: '⭐';
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    font-size: 16px;
+    animation: sparkle 2s ease-in-out infinite 0.5s;
+}
