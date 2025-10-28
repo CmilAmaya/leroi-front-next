@@ -1,0 +1,236 @@
+/* About Page */
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 57vh;
+    background-color: var(--background);
+    padding: 2.5rem 1.25rem;
+}
+
+.intro h3 {
+    color: var(--primary);
+    font-size: 2.25rem; 
+    margin-top: 3.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem; 
+}
+
+.imagotipo {
+    margin-top: 7rem;
+    width: 60vh;
+    height: auto;
+    
+}
+
+.vision-mission {
+    background-color: var(--background);
+    padding: 3.75rem 1.25rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10vh;
+    flex-wrap: wrap;
+}
+
+.vision-wrapper,
+.mission-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 1.25rem; 
+    width: 100%; 
+    max-width: 70vh; 
+}
+
+.vision,
+.mission {
+    background-color: var(--card);
+    border-radius: 1rem;
+    padding: 5vh;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    flex: 1;
+    min-width: 30vh;
+    max-width: 70vh;
+    min-height: 30vh;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vision:hover,
+.mission:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.vision-wrapper h3,
+.mission-wrapper h3 {
+    color: var(--foreground);
+    font-size: 2rem; 
+    margin: 0;
+    text-align: center; 
+}
+
+.vision p,
+.mission p {
+    font-size: 1rem; 
+    line-height: 1.6;
+    color: #fff;
+}
+
+/* Team Section */
+.team {
+    background-color: var(--background);
+    padding: 3.75rem 1.25rem; 
+    text-align: center;
+}
+
+.team h3 {
+    color: var(--primary);
+    font-size: 2.25rem; 
+    margin-bottom: 2.5rem; 
+}
+
+.team-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 3.125rem;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.team-card {
+    background-color: var(--card);
+    border-radius: 1rem; 
+    padding: 1.25rem; 
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem; 
+    flex: 1;
+    min-width: 18.75rem; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.team-card img.team-photo {
+    width: 6.25rem;
+    height: 6.25rem; 
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.team-card-content {
+    flex: 1;
+    text-align: left;
+}
+
+.team-card h4 {
+    color: white;
+    font-size: 1.5rem; 
+    margin-bottom: 0.625rem; 
+}
+
+.team-card p {
+    font-size: 1rem; 
+    margin-bottom: 1.25rem; 
+}
+
+.team-card a {
+    color: #fff;
+    font-size: 1.5rem; 
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.team-card a:hover {
+    color: var(--hover);
+}
+
+/* Team Icons */
+.team-icons {
+    display: flex;
+    gap: 0.625rem; 
+    margin-top: 0.625rem; 
+}
+
+.team-icons a {
+    color: white;
+    font-size: 1.5rem;
+    transition: color 0.3s;
+}
+
+.team-icons a:hover {
+    color: var(--navbar);
+}
+
+.team-icons .icon {
+    font-size: 2rem;
+    width: 7vh;
+    height: 7vh;
+}
+
+/*Pantallas pequeñas */
+@media (max-width: 768px) {
+    .intro h3 {
+        font-size: 1.75rem; 
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .imagotipo {
+        width: 60vw;
+        max-width: 75vw;
+        margin-top: 8rem;
+    }
+
+    .vision-mission {
+        flex-direction: column;
+        gap: 1.25rem; 
+        padding: 2.5rem 0.625rem; 
+    }
+
+    .vision-wrapper h3,
+    .mission-wrapper h3 {
+        font-size: 1.75rem; 
+        text-align: center;
+    }
+
+    .vision p,
+    .mission p {
+        font-size: 0.875rem; 
+    }
+
+    .team-cards {
+        grid-template-columns: 1fr; 
+    }
+
+    .team-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .team-card img.team-photo {
+        margin-bottom: 0.9375rem; 
+    }
+
+    .team-card-content {
+        text-align: center;
+    }
+}
