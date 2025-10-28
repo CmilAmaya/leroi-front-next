@@ -78,10 +78,15 @@
     color: rgba(255, 255, 255, 0.5);
 }
 
+.terms input[type="checkbox"] {
+  cursor: pointer; /* 👈 hace clic directamente sobre el checkbox */
+}
+
 .terms {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;    
 }
 
 .terms-group {
@@ -101,6 +106,7 @@
 .terms-link {
     color: #6366f1;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .terms-link:hover {
@@ -227,6 +233,7 @@
   gap: 10px;
   box-shadow: 0 2px 8px #835bfc44;
   transition: background 0.2s;
+  cursor:pointer;
 }
 .buy-btn:disabled {
   background: #a48cf7;
@@ -234,6 +241,9 @@
 }
 .icon-btn {
   margin-right: 6px;
+}
+.buy-btn:hover {
+  background: #9b7ffc;
 }
 
 /* Error */
