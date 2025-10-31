@@ -152,7 +152,7 @@ export default function ProfilePage() {
   const fetchReminderSettings = async (email) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/settings/${email}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/settings/${email}`
       );
       
       if (response.ok) {
@@ -171,7 +171,7 @@ export default function ProfilePage() {
   const fetchAvailableRoadmaps = async (email) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/roadmaps/${email}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/roadmaps/${email}`
       );
       
       if (response.ok) {
@@ -192,7 +192,7 @@ export default function ProfilePage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/link-telegram`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/link-telegram`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -220,7 +220,7 @@ export default function ProfilePage() {
   const handleUnlinkTelegram = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/unlink-telegram/${userEmail}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/unlink-telegram/${userEmail}`,
         { method: 'DELETE' }
       );
 
@@ -245,7 +245,7 @@ export default function ProfilePage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/link-whatsapp`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/link-whatsapp`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -273,7 +273,7 @@ export default function ProfilePage() {
   const handleUnlinkWhatsApp = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/unlink-whatsapp/${userEmail}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/unlink-whatsapp/${userEmail}`,
         { method: 'DELETE' }
       );
 
@@ -293,7 +293,7 @@ export default function ProfilePage() {
   const handleUpdateReminderSettings = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_REMINDER_SERVICE_URL}/api/users/settings/${userEmail}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/reminder-service/api/users/settings/${userEmail}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
