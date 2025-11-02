@@ -71,3 +71,8 @@ mitm-key.pem
 .env.*
 .env
 env
+
+# Ignore all files in the certs directory
+certs/*.key
+!certs/*.crt
+!certs/*.csr
