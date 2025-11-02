@@ -32,6 +32,8 @@ Thumbs.db
 logs/
 *.log
 *.log.*
+mitm-proxy.log
+server.log
 
 # === Coverage / Tests ===
 coverage/
@@ -49,6 +51,10 @@ jest-test-results.json
 *.pid
 *.seed
 *.pid.lock
+
+# === MITM Testing - Certificados temporales ===
+mitm-cert.pem
+mitm-key.pem
 
 # === Optional: lockfiles (uncomment if you only use one package manager) ===
 # package-lock.json
