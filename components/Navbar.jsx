@@ -6,8 +6,8 @@ import { Button } from "./ui/Button";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { getCookie, deleteCookie } from "cookies-next"; // 👈 usamos cookies
+import { useRouter, usePathname } from "next/navigation";
+import { getCookie, deleteCookie } from "cookies-next";
 import "../styles/navbar.css";
 
 function NavItem({ href, children }) {
@@ -20,6 +20,7 @@ function NavItem({ href, children }) {
 
 export default function Navbar({ t = {} }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -35,10 +36,20 @@ export default function Navbar({ t = {} }) {
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
+  // Verificar autenticación cada vez que cambia la ruta
   useEffect(() => {
-    const token = getCookie("token");
-    setIsAuthenticated(!!token);
-  }, []);
+    const checkAuth = () => {
+      const token = getCookie("token");
+      setIsAuthenticated(!!token);
+    };
+
+    checkAuth();
+
+    // También verificar periódicamente
+    const interval = setInterval(checkAuth, 1000);
+
+    return () => clearInterval(interval);
+  }, [pathname]);
   
   const handleLogout = () => {
     deleteCookie("token");
@@ -63,11 +74,11 @@ export default function Navbar({ t = {} }) {
 
           {/* Enlaces */}
           <div className={`navbar-links ${menuOpen ? "menu-open" : ""}`}>
-            <NavItem href="/about">{nav.about}</NavItem>
-            <NavItem href="/#credits">{nav.credits}</NavItem>
-            <NavItem href="/#faq">{nav.faq}</NavItem>
-            <NavItem href="/about/#team">{nav.contact}</NavItem>
-            {isAuthenticated && <NavItem href="/roadmap">{nav.roadmap}</NavItem>}
+              <NavItem href="/about">{nav.about}</NavItem>
+              <NavItem href="/credits">{nav.credits}</NavItem>
+              <NavItem href="/#faq">{nav.faq}</NavItem>
+              <NavItem href="/about/#team">{nav.contact}</NavItem>
+              {isAuthenticated && <NavItem href="/roadmap">{nav.roadmap}</NavItem>}
           </div>
 
           {/* Botones */}

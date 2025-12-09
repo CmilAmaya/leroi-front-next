@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { Fade } from "react-awesome-reveal";
 import Footer from "../components/Footer";
 import "../styles/styles.css";
@@ -101,65 +102,80 @@ export default function Home() {
           </Fade>
         </h2>
         <p className="definition">
-          Leroi es una plataforma diseñada para optimizar la planificación y
-          organización del estudio. Automatiza la creación de planes de estudio,
-          reduciendo el tiempo dedicado a estructurar qué y cómo aprender.
-          Además, identifica y jerarquiza subtemas para proporcionar un camino
-          lógico en el aprendizaje.
+          Leroi es una plataforma de aprendiz diseñada para optimizar la planificación y organización del estudio. 
+          Automatiza la creación de planes de estudio, reduciendo el tiempo dedicado a estructurar qué y cómo aprender. 
+          Además, identifica y jerarquiza subtemas para proporcionar un camino lógico en el aprendizaje. 
+          Su capacidad de personalización permite a los usuarios cargar sus propios documentos generando rutas de estudio 
+          adaptadas a su contenido específico.
         </p>
-
         <div className="features-container">
           <div className="feature-card">
             <div className="feature-icon">
-              <Image
-                src="/feature-1.svg"
-                alt="Asistente de aprendizaje"
-                width={80}
-                height={80}
-              />
+              <img src="public/feature-1.svg" alt="Asistente de aprendizaje" />
             </div>
             <h3>Asistente de aprendizaje</h3>
             <p>
-              Leroi automatiza la creación de planes de estudio, reduciendo
-              significativamente el tiempo dedicado a planificar qué y cómo
-              estudiar.
+              Leroi automatiza la creación de planes de estudio, reduciendo significativamente el tiempo dedicado a planificar qué y cómo estudiar.
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">
-              <Image
-                src="/feature-2.svg"
-                alt="Organizador"
-                width={80}
-                height={80}
-              />
+              <img src="public/feature-2.svg" alt="Organizador" />
             </div>
             <h3>Organizador</h3>
             <p>
-              Leroi identifica y organiza subtemas jerárquicamente,
-              proporcionando un camino lógico y progresivo para el aprendizaje.
+              Leroi identifica y organiza subtemas jerárquicamente, proporcionando un camino lógico y progresivo para el aprendizaje.
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">
-              <Image
-                src="/feature-3.svg"
-                alt="Personalizador experto"
-                width={80}
-                height={80}
-              />
+              <img src="public/feature-3.svg" alt="Personalizador experto" />
             </div>
             <h3>Personalizador experto</h3>
             <p>
-              Leroi permite a los usuarios cargar sus documentos (libros,
-              artículos, apuntes) y generar rutas de aprendizaje adaptadas a ese
-              contenido específico.
+              Leroi permite a los usuarios cargar sus documentos (libros, artículos, apuntes) y generar rutas de aprendizaje adaptadas a ese contenido específico.
             </p>
           </div>
         </div>
       </section>
+      {/*Pricing*/}
+      <section id= "credits" className="pricing">
+        <h2>
+          <Fade delay={200} cascade damping={0.02}>
+            Adquiere créditos
+          </Fade>
+        </h2>
+        <div className="pricing-container">
+          <div className="pricing-card">
+            <h3>Principiante</h3>
+            <p className="price">250 créditos</p>
+            <ul>
+              <li>Ideal para probar Leroi</li>
+              <li>Procesa muchos documentos pequeños </li>
+            </ul>
+            <Link href={{ pathname: "/credits", query: { credits: 250 } }} className="cta-button">Comprar paquete</Link>
+          </div>
+          <div className="pricing-card">
+            <h3>Intermedio</h3>
+            <p className="price">750 créditos</p>
+            <ul>
+              <li>Ideal para estudiantes</li>
+              <li>Suficiente para generar roadmaps con archivos medianamente grandes</li>
+            </ul>
+            <Link href={{ pathname: "/credits", query: { credits: 750 } }} className="cta-button">Comprar paquete</Link>
+          </div>
+          <div className="pricing-card">
+            <h3>Avanzado</h3>
+            <p className="price">1500 créditos</p>
+            <ul>
+              <li>Perfecto para autodidactas avanzados</li>
+              <li>Genera roadmaps con archivos grandes</li>
+            </ul>
+            <Link href={{ pathname: "/credits", query: { credits: 1500 } }} className="cta-button">Comprar paquete</Link>
+          </div>
+        </div>
+      </section>
+
 
       {/* Preguntas frecuentes */}
       <section id="faq" className="faq">
