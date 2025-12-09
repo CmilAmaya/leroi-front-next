@@ -31,10 +31,8 @@ export default function LoginPage() {
   const [userEmail, setUserEmail] = useState('');
   const [isSubmittingCode, setIsSubmittingCode] = useState(false);
 
-  // Genera código 2FA aleatorio (solo ejemplo)
   const generateVerificationCode = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
-  // Manejar resultado de signInWithRedirect cuando el usuario vuelve de Google
   useEffect(() => {
     const handleRedirectResult = async () => {
       try {
@@ -73,10 +71,8 @@ export default function LoginPage() {
     };
 
     handleRedirectResult();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  // Envía correo de verificación
   const sendVerificationEmail = async (email, code) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users_authentication_path/send-verification`, {
@@ -95,7 +91,6 @@ export default function LoginPage() {
     }
   };
 
-  // Valida campos del formulario
   const validateForm = () => {
     if (!formData.email || !formData.password) {
       toast.error('Por favor, completa todos los campos');
@@ -104,7 +99,6 @@ export default function LoginPage() {
     return true;
   };
 
-  // 🔐 Login normal
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -123,7 +117,6 @@ export default function LoginPage() {
       console.log('Respuesta del login:', data);
 
       if (data.status === '2fa_required') {
-        // Si requiere verificación 2FA
         setUserEmail(formData.email);
         const code = generateVerificationCode();
         await sendVerificationEmail(formData.email, code);
@@ -159,7 +152,6 @@ export default function LoginPage() {
     }
   };
 
-  // 🔐 Verificar código de 2FA
   const handleVerifyCode = async () => {
     try {
       setIsSubmittingCode(true);
@@ -172,10 +164,9 @@ export default function LoginPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.detail || 'Código incorrecto');
 
-      // ✅ Guarda token en cookie segura
       setCookie('token', data.access_token, {
         path: '/',
-        maxAge: 60 * 60 * 24, // 1 día
+        maxAge: 60 * 60 * 24, 
         sameSite: 'strict',
         secure: process.env.NODE_ENV === 'production',
       });
@@ -189,7 +180,6 @@ export default function LoginPage() {
     }
   };
 
-  // 🔄 Recuperar contraseña
   const handleForgotPassword = async () => {
     if (!forgotPasswordEmail || !forgotPasswordEmail.includes('@')) {
       toast.error('Por favor ingresa un correo válido');
@@ -220,13 +210,11 @@ export default function LoginPage() {
     }
   };
 
-  // 🔑 Login con Google
   const handleGoogleSignup = async () => {
     setIsLoading(true);
     try {
       const provider = new GoogleAuthProvider();
 
-      // Intentamos popup; si falla (COOP u otro), hacemos redirect como fallback
       try {
         const result = await signInWithPopup(auth, provider);
         const userData = { email: result.user.email, name: result.user.displayName, provider: 'google' };
@@ -340,9 +328,6 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
-
-        {/* Resto del JSX (modals, etc.) permanece sin cambios */}
-        {/* ...existing code... */}
       </div>
     </div>
   );
